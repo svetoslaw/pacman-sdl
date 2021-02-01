@@ -5,3 +5,8 @@
 #include <stdio.h>
 #include <vector>
 #include <string>
+#include "Vector2.h"
+
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 720
+#define PPU 16

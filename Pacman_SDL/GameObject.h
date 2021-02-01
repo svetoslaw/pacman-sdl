@@ -4,10 +4,15 @@
 class GameObject
 {
 public:
-	virtual SDL_Rect getTransform();
+	//error prone
+	virtual SDL_FRect getTransform();
+	virtual std::string getTag();
 	virtual void LoadMedia(SDL_Renderer* renderer);
 	virtual void Start();
 	virtual void HandleEvent(SDL_Event& event);
-	virtual void Update();
+	virtual void Update(float deltaTime);
 	virtual void Render(SDL_Renderer* renderer);
+
+	virtual bool CheckForCollision(const SDL_FRect &other);
+	virtual void OnCollision(GameObject &other, float deltaTime);
 };

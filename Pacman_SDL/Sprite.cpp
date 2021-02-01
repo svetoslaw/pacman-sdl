@@ -3,6 +3,7 @@
 Sprite::~Sprite()
 {
 	SDL_DestroyTexture(texture);
+	texture = NULL;
 }
 
 bool Sprite::LoadTexture(SDL_Renderer* renderer, std::string path)
@@ -17,7 +18,7 @@ bool Sprite::LoadTexture(SDL_Renderer* renderer, std::string path)
 	return successFlag;
 }
 
-void Sprite::RenderTexture(SDL_Renderer* renderer, SDL_Rect* destination)
+void Sprite::RenderTexture(SDL_Renderer* renderer, const SDL_FRect* destination)
 {
-	SDL_RenderCopy(renderer, texture, NULL, destination);
+	SDL_RenderCopyF(renderer, texture, NULL, destination);
 }

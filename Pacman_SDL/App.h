@@ -2,8 +2,6 @@
 #include "Commons.h"
 #include "GameObject.h"
 
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 720
 
 //temp solution
 
@@ -23,7 +21,10 @@ public:
 
 private:
 	std::vector<GameObject*> gameObjects;
-
+	float deltaTime; /*Delta Time since last frame in seconds*/
+	float lastTime;
 	SDL_Window* window;
+
+	void MainLoop();
 };
 

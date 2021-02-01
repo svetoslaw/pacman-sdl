@@ -1,7 +1,5 @@
 #include "Player.h"
 
-//const std::string Player::spritePath = "./Assets/pacman-art/pacman-right/1.png";
-
 void Player::LoadMedia(SDL_Renderer* renderer)
 {
 	sprite.LoadTexture(renderer, spritePath);
@@ -17,23 +15,23 @@ void Player::HandleEvent(SDL_Event& event)
 	switch (event.key.keysym.sym)
 	{
 	case SDLK_UP:
-		movement.y = -speed;
-		movement.x = 0;
+		movementVelocity.y = -speed;
+		movementVelocity.x = 0;
 		break;
 
 	case SDLK_DOWN:
-		movement.y = speed;
-		movement.x = 0;
+		movementVelocity.y = speed;
+		movementVelocity.x = 0;
 		break;
 
 	case SDLK_LEFT:
-		movement.x = -speed;
-		movement.y = 0;
+		movementVelocity.x = -speed;
+		movementVelocity.y = 0;
 		break;
 
 	case SDLK_RIGHT:
-		movement.x = speed;
-		movement.y = 0;
+		movementVelocity.x = speed;
+		movementVelocity.y = 0;
 		break;
 
 	default:
@@ -41,9 +39,9 @@ void Player::HandleEvent(SDL_Event& event)
 	}
 }
 
-void Player::Update()
+void Player::Update(float deltaTime)
 {
-	Move(movement);
+	Move(deltaTime);
 }
 
 void Player::Render(SDL_Renderer* renderer)
@@ -51,18 +49,52 @@ void Player::Render(SDL_Renderer* renderer)
 	sprite.RenderTexture(renderer, &transform);
 }
 
-SDL_Rect Player::getTransform()
+bool Player::CheckForCollision(const SDL_FRect& other)
+{
+	if (other.x > transform.x + transform.w)
+		return false;
+
+	if (other.y > transform.y + transform.h)
+		return false;
+
+	if (other.x + other.w < transform.x)
+		return false;
+
+	if (other.y + other.h < transform.y)
+		return false;
+
+	return true;
+}
+
+void Player::OnCollision(GameObject& other, float deltaTime)
+{
+	if (other.getTag() == "Wall")
+	{
+		transform.x -= movementVelocity.x * deltaTime;
+		transform.y -= movementVelocity.y * deltaTime;
+
+		movementVelocity.x = 0;
+		movementVelocity.y = 0;
+	}
+}
+
+SDL_FRect Player::getTransform()
 {
 	return transform;
 }
 
-void Player::setTransform(SDL_Rect transform)
+void Player::setTransform(SDL_FRect transform)
 {
 	this->transform = transform;
 }
 
-void Player::Move(Vector2 movement)
+void Player::Move(float deltaTime)
 {
-	transform.x += movement.x;
-	transform.y += movement.y;
+	transform.x += movementVelocity.x * deltaTime;
+	transform.y += movementVelocity.y * deltaTime;
+}
+
+bool Player::CheckForWall()
+{
+	return false;
 }

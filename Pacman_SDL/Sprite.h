@@ -20,9 +20,10 @@ public:
 	//SDL_Texture* getTexture();
 	
 	bool LoadTexture(SDL_Renderer* renderer, std::string path);
-	void RenderTexture(SDL_Renderer* renderer, SDL_Rect* destination);
+	void RenderTexture(SDL_Renderer* renderer, const SDL_FRect* destination);
 	
 private:
+	//move spritePaths to this class
 	//std::string texturePath;
 	SDL_Texture* texture;
 };

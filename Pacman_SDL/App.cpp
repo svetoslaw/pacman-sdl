@@ -35,6 +35,8 @@ bool App::Init()
 				}
 				else 
 				{
+					deltaTime = 0;
+					lastTime = SDL_GetTicks();
 					//Everything is OK
 				}
 			}
@@ -46,9 +48,6 @@ bool App::Init()
 
 void App::Start()
 {
-	bool quit = false;
-	SDL_Event event;
-
 	/*Load all the assets of the gameObjects*/
 	for (auto& gameObject : gameObjects)
 		gameObject->LoadMedia(renderer);
@@ -57,6 +56,15 @@ void App::Start()
 	for (auto& gameObject : gameObjects)
 		gameObject->Start();
 
+	MainLoop();
+}
+
+void App::MainLoop()
+{
+	bool quit = false;
+	SDL_Event event;
+
+	/*Main Loop*/
 	while (!quit)
 	{
 		while (SDL_PollEvent(&event) != 0)
@@ -73,7 +81,22 @@ void App::Start()
 
 		/*Call Update() for all of the gameObjects*/
 		for (auto& gameObject : gameObjects)
-			gameObject->Update();
+			gameObject->Update(deltaTime);
+
+		/*Collision Check*/
+		for (size_t i = 0; i < gameObjects.size(); i++)
+		{
+			for (size_t j = i + 1; j < gameObjects.size(); j++)
+			{
+				if (gameObjects[i]->CheckForCollision(gameObjects[j]->getTransform()))
+				{
+					gameObjects[i]->OnCollision(*gameObjects[j], deltaTime);
+					gameObjects[j]->OnCollision(*gameObjects[i], deltaTime);
+				}
+			}
+		}
+
+		
 
 		SDL_SetRenderDrawColor(renderer, 0, 128, 128, 255);
 		SDL_RenderClear(renderer);
@@ -83,6 +106,11 @@ void App::Start()
 			gameObject->Render(renderer);
 
 		SDL_RenderPresent(renderer);
+
+		deltaTime = (SDL_GetTicks() - lastTime) / 1000.0f;
+		lastTime = SDL_GetTicks();
+
+		printf("delta time: %f\n", deltaTime);
 	}
 }
 
@@ -98,4 +126,3 @@ void App::Quit()
 	IMG_Quit();
 	SDL_Quit();
 }
-

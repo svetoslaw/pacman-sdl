@@ -1,18 +1,25 @@
 #include "GameObject.h"
 
-SDL_Rect GameObject::getTransform()
+SDL_FRect GameObject::getTransform()
 {
-	return SDL_Rect{ 0, 0, 0, 0 };
+	return SDL_FRect{ 0, 0, 0, 0 };
 }
 
-void GameObject::LoadMedia(SDL_Renderer* renderer)
+std::string GameObject::getTag()
 {
+	return "";
 }
+
+void GameObject::LoadMedia(SDL_Renderer* renderer){}
 
 void GameObject::Start(){}
 
-void GameObject::Update(){}
+void GameObject::Update(float deltaTime){}
 
 void GameObject::Render(SDL_Renderer* renderer){}
+
+bool GameObject::CheckForCollision(const SDL_FRect& other){	return false; }
+
+void GameObject::OnCollision(GameObject& other, float deltaTime){}
 
 void GameObject::HandleEvent(SDL_Event& event){}

@@ -5,6 +5,16 @@ void Player::LoadMedia(SDL_Renderer* renderer)
 	sprite.LoadTexture(renderer, spritePath);
 }
 
+void Player::Render(SDL_Renderer* renderer)
+{
+	sprite.RenderTexture(renderer, &transform);
+}
+
+std::string Player::getTag()
+{
+	return tag;
+}
+
 void Player::Start()
 {
 
@@ -14,22 +24,22 @@ void Player::HandleEvent(SDL_Event& event)
 {
 	switch (event.key.keysym.sym)
 	{
-	case SDLK_UP:
+	case SDLK_UP: case SDLK_w:
 		movementVelocity.y = -speed;
 		movementVelocity.x = 0;
 		break;
 
-	case SDLK_DOWN:
+	case SDLK_DOWN: case SDLK_s:
 		movementVelocity.y = speed;
 		movementVelocity.x = 0;
 		break;
 
-	case SDLK_LEFT:
+	case SDLK_LEFT: case SDLK_a:
 		movementVelocity.x = -speed;
 		movementVelocity.y = 0;
 		break;
 
-	case SDLK_RIGHT:
+	case SDLK_RIGHT: case SDLK_d:
 		movementVelocity.x = speed;
 		movementVelocity.y = 0;
 		break;
@@ -42,11 +52,7 @@ void Player::HandleEvent(SDL_Event& event)
 void Player::Update(float deltaTime)
 {
 	Move(deltaTime);
-}
-
-void Player::Render(SDL_Renderer* renderer)
-{
-	sprite.RenderTexture(renderer, &transform);
+	//printf("Score: %i\n", score);
 }
 
 bool Player::CheckForCollision(const SDL_FRect& other)
@@ -76,6 +82,12 @@ void Player::OnCollision(GameObject& other, float deltaTime)
 		movementVelocity.x = 0;
 		movementVelocity.y = 0;
 	}
+
+	if (other.getTag() == "Point")
+	{
+		score += 100;
+	}
+
 }
 
 SDL_FRect Player::getTransform()

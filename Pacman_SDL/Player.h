@@ -13,6 +13,8 @@ public:
 	void Update(float deltaTime);
 	void Render(SDL_Renderer* renderer);
 
+	std::string getTag();
+
 	bool CheckForCollision(const SDL_FRect& other);
 	void OnCollision(GameObject& other, float deltaTime);
 
@@ -21,12 +23,17 @@ public:
 
 private:
 	SDL_FRect transform;
-	Sprite sprite;
+	const std::string tag = "Player";
 
+	Sprite sprite;
 	const std::string spritePath = "./Assets/pacman-art/pacman-right/1.png";
+
 	const float speed = 300;
 	Vector2 movementVelocity;
 
+	unsigned score = 0;
+
 	void Move(float deltaTime);
+
 	bool CheckForWall();
 };

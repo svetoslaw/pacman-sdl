@@ -22,5 +22,5 @@ void Wall::setTransform(SDL_FRect transform)
 
 std::string Wall::getTag()
 {
-	return "Wall";
+	return tag;
 }

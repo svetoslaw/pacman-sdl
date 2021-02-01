@@ -59,6 +59,19 @@ void App::Start()
 	MainLoop();
 }
 
+void App::Quit()
+{
+	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
+	IMG_Quit();
+	SDL_Quit();
+}
+
+void App::AddGameObject(GameObject* gameObject)
+{
+	gameObjects.push_back(gameObject);
+}
+
 void App::MainLoop()
 {
 	bool quit = false;
@@ -67,6 +80,8 @@ void App::MainLoop()
 	/*Main Loop*/
 	while (!quit)
 	{
+		DestroyObjects();
+
 		while (SDL_PollEvent(&event) != 0)
 		{
 			if (event.type == SDL_QUIT)
@@ -84,45 +99,55 @@ void App::MainLoop()
 			gameObject->Update(deltaTime);
 
 		/*Collision Check*/
-		for (size_t i = 0; i < gameObjects.size(); i++)
-		{
-			for (size_t j = i + 1; j < gameObjects.size(); j++)
-			{
-				if (gameObjects[i]->CheckForCollision(gameObjects[j]->getTransform()))
-				{
-					gameObjects[i]->OnCollision(*gameObjects[j], deltaTime);
-					gameObjects[j]->OnCollision(*gameObjects[i], deltaTime);
-				}
-			}
-		}
+		CollisionCheck();
 
-		
-
-		SDL_SetRenderDrawColor(renderer, 0, 128, 128, 255);
-		SDL_RenderClear(renderer);
-
-		/*Render all of the gameObjects*/
-		for (auto& gameObject : gameObjects)
-			gameObject->Render(renderer);
-
-		SDL_RenderPresent(renderer);
+		Render();
 
 		deltaTime = (SDL_GetTicks() - lastTime) / 1000.0f;
 		lastTime = SDL_GetTicks();
 
-		printf("delta time: %f\n", deltaTime);
+		//printf("delta time: %f\n", deltaTime);
 	}
 }
 
-void App::AddGameObject(GameObject* gameObject)
+void App::DestroyObjects()
 {
-	gameObjects.push_back(gameObject);
+	auto it = gameObjects.begin();
+	while (it != gameObjects.end())
+	{
+		if ((*it)->ToDestroy())
+		{
+			delete *it;
+			it = gameObjects.erase(it);
+		}
+		else
+			it++;
+	}
 }
 
-void App::Quit()
+void App::CollisionCheck()
 {
-	SDL_DestroyRenderer(renderer);
-	SDL_DestroyWindow(window);
-	IMG_Quit();
-	SDL_Quit();
+	for (size_t i = 0; i < gameObjects.size(); i++)
+	{
+		for (size_t j = i + 1; j < gameObjects.size(); j++)
+		{
+			if (gameObjects[i]->CheckForCollision(gameObjects[j]->getTransform()))
+			{
+				gameObjects[i]->OnCollision(*gameObjects[j], deltaTime);
+				gameObjects[j]->OnCollision(*gameObjects[i], deltaTime);
+			}
+		}
+	}
+}
+
+void App::Render()
+{
+	SDL_SetRenderDrawColor(renderer, 0, 128, 128, 255);
+	SDL_RenderClear(renderer);
+
+	/*Render all of the gameObjects*/
+	for (auto& gameObject : gameObjects)
+		gameObject->Render(renderer);
+
+	SDL_RenderPresent(renderer);
 }

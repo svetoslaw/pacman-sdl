@@ -15,8 +15,9 @@ public:
 	std::string getTag();
 private:
 	SDL_FRect transform;
+	const std::string tag = "Wall";
+
 	Sprite sprite;
 	const std::string spritePath = "./Assets/pacman-art/other/apple.png";
-
 };
 

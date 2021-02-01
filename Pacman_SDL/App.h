@@ -20,11 +20,15 @@ public:
 	SDL_Renderer* renderer;
 
 private:
-	std::vector<GameObject*> gameObjects;
+	std::vector<GameObject*> gameObjects; //adapt to use a list instead
+	
 	float deltaTime; /*Delta Time since last frame in seconds*/
 	float lastTime;
 	SDL_Window* window;
 
 	void MainLoop();
+	void DestroyObjects();
+	void CollisionCheck();
+	void Render();
 };
 

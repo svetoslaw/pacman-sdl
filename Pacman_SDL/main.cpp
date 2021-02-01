@@ -12,11 +12,11 @@ int main(int argc, char* args[])
 		printf("Failed to Initialize\n");
 	else
 	{
-		//LevelBuilder lb;
-		//lb.BuildLevelFromFile(app, "./Assets/levels/level1.txt");
+		LevelBuilder lb;
+		lb.BuildLevelFromFile(app, "./Assets/levels/level1.txt");
 
 		
-
+		/*
 		Wall wall;
 		wall.setTransform({ 32, 32, 16, 16 });
 		app.AddGameObject(&wall);
@@ -24,7 +24,7 @@ int main(int argc, char* args[])
 		Player player;
 		player.setTransform({ 64, 64, 16, 16 });
 		app.AddGameObject(&player);
-		
+		*/
 
 		app.Start();
 	}

@@ -3,6 +3,13 @@
 #include "Sprite.h"
 #include "Commons.h"
 
+enum MoveDirection
+{
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT
+};
 
 class Player : public GameObject
 {
@@ -15,7 +22,7 @@ public:
 
 	std::string getTag();
 
-	bool CheckForCollision(const SDL_FRect& other);
+	//bool CheckForCollision(const SDL_FRect& other);
 	void OnCollision(GameObject& other, float deltaTime);
 
 	SDL_FRect getTransform();
@@ -28,6 +35,7 @@ private:
 	Sprite sprite;
 	const std::string spritePath = "./Assets/pacman-art/pacman-right/1.png";
 
+	MoveDirection nextMove;
 	const float speed = 300;
 	Vector2 movementVelocity;
 

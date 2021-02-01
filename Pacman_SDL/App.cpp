@@ -142,7 +142,7 @@ void App::CollisionCheck()
 
 void App::Render()
 {
-	SDL_SetRenderDrawColor(renderer, 0, 128, 128, 255);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
 
 	/*Render all of the gameObjects*/

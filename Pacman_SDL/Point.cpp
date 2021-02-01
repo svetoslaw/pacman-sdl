@@ -20,6 +20,7 @@ void Point::Render(SDL_Renderer* renderer)
 	sprite.RenderTexture(renderer, &transform);
 }
 
+/*
 bool Point::CheckForCollision(const SDL_FRect& other)
 {
 	if (other.x > transform.x + transform.w)
@@ -36,7 +37,7 @@ bool Point::CheckForCollision(const SDL_FRect& other)
 
 	return true;
 }
-
+*/
 void Point::OnCollision(GameObject& other, float deltaTime)
 {
 	if (other.getTag() == "Player")

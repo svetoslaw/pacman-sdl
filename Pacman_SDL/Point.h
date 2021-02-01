@@ -9,7 +9,7 @@ public:
 	void LoadMedia(SDL_Renderer* renderer);
 	void Render(SDL_Renderer* renderer);
 	
-	bool CheckForCollision(const SDL_FRect& other);	
+	//bool CheckForCollision(const SDL_FRect& other);	
 	void OnCollision(GameObject& other, float deltaTime);
 	
 	std::string getTag();

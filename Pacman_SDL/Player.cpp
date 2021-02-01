@@ -55,6 +55,7 @@ void Player::Update(float deltaTime)
 	//printf("Score: %i\n", score);
 }
 
+/*
 bool Player::CheckForCollision(const SDL_FRect& other)
 {
 	if (other.x > transform.x + transform.w)
@@ -70,14 +71,32 @@ bool Player::CheckForCollision(const SDL_FRect& other)
 		return false;
 
 	return true;
-}
+}*/
 
 void Player::OnCollision(GameObject& other, float deltaTime)
 {
 	if (other.getTag() == "Wall")
 	{
-		transform.x -= movementVelocity.x * deltaTime;
-		transform.y -= movementVelocity.y * deltaTime;
+		/*Make sure to stop at wall*/
+		if (movementVelocity.x > 0)
+		{
+			transform.x = other.getTransform().x - TILE_SIZE;
+		}
+		if (movementVelocity.x < 0)
+		{
+			transform.x = other.getTransform().x + TILE_SIZE;
+		}
+		if (movementVelocity.y > 0)
+		{
+			transform.y = other.getTransform().y - TILE_SIZE;
+		}
+		if (movementVelocity.y < 0)
+		{
+			transform.y = other.getTransform().y + TILE_SIZE;
+		}
+
+		//transform.x -= movementVelocity.x * deltaTime;
+		//transform.y -= movementVelocity.y * deltaTime;
 
 		movementVelocity.x = 0;
 		movementVelocity.y = 0;

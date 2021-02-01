@@ -22,6 +22,7 @@ public:
 	/*Set an object to be destroy before the next Update*/
 	virtual void Destroy(); 
 
+	virtual ~GameObject();
 private:
 	bool toDestroy = false;
 };

@@ -1,14 +1,16 @@
 #pragma once
 #include "GameObject.h"
 #include "Sprite.h"
+#include "TileGraph.h"
 #include "Commons.h"
 
-enum MoveDirection
+enum class MoveDirection
 {
 	UP,
 	DOWN,
 	LEFT,
-	RIGHT
+	RIGHT,
+	NONE
 };
 
 class Player : public GameObject
@@ -28,6 +30,8 @@ public:
 	SDL_FRect getTransform();
 	void setTransform(SDL_FRect transform);
 
+	void setTileGraph(TileGraph* tileGraph);
+
 private:
 	SDL_FRect transform;
 	const std::string tag = "Player";
@@ -35,13 +39,22 @@ private:
 	Sprite sprite;
 	const std::string spritePath = "./Assets/pacman-art/pacman-right/1.png";
 
-	MoveDirection nextMove;
-	const float speed = 300;
+	//MoveDirection previousMove = MoveDirection::NONE;
+	//MoveDirection currentMove = MoveDirection::NONE;
+
+	TileGraph* tileGraph;
+
+	MoveDirection nextMove = MoveDirection::NONE;
+
+	MoveDirection tryMove = MoveDirection::NONE;
+
+	const float speed = 160;
+	float movementStack = 0; /*Used to lock movement to integer values*/
 	Vector2 movementVelocity;
 
 	unsigned score = 0;
 
 	void Move(float deltaTime);
 
-	bool CheckForWall();
+	bool NextTileIsPassable();
 };

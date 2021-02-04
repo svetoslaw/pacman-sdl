@@ -147,6 +147,8 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="TileGraph.cpp" />
     <ClCompile Include="Vector2.cpp" />
     <ClCompile Include="Wall.cpp" />
   </ItemGroup>
@@ -162,6 +164,8 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="Tile.h" />
+    <ClInclude Include="TileGraph.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Wall.h" />
   </ItemGroup>

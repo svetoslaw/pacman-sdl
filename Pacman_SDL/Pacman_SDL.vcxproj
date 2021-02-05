@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="LevelBuilder.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="App.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Commons.h" />
+    <ClInclude Include="Ghost.h" />
     <ClInclude Include="LevelBuilder.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Point.h" />

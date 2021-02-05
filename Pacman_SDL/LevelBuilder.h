@@ -6,12 +6,12 @@
 #include "Player.h"
 #include "Wall.h"
 #include "Point.h"
+#include "Ghost.h"
 
 class LevelBuilder
 {
 public:
 	bool BuildLevelFromFile(App& app, std::string filePath);
 private:
-	void CreateTileGraph();
 };
 

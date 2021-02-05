@@ -5,8 +5,6 @@ SDL_FRect GameObject::getTransform()
 	return SDL_FRect{ 0, 0, 0, 0 };
 }
 
-void GameObject::setTransform(){}
-
 std::string GameObject::getTag()
 {
 	return "";

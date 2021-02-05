@@ -118,6 +118,11 @@ void Player::OnCollision(GameObject& other, float deltaTime)
 		score += 100;
 	}
 
+	if (other.getTag() == "Ghost")
+	{
+		dead = true;
+		Destroy();
+	}
 }
 
 SDL_FRect Player::getTransform()
@@ -140,6 +145,8 @@ bool Player::NextTileIsPassable()
 	Tile* tile;
 	int dx = 0;
 	int dy = 0;
+
+	//adapt to make controls smoother
 
 	switch (tryMove)
 	{

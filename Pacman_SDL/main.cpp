@@ -12,6 +12,7 @@ int main(int argc, char* args[])
 		printf("Failed to Initialize\n");
 	else
 	{
+		srand(time(0));
 		LevelBuilder lb;
 		lb.BuildLevelFromFile(app, "./Assets/levels/level1.txt");
 

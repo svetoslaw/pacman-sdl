@@ -61,6 +61,9 @@ void App::Start()
 
 void App::Quit()
 {
+	for (auto& gameObject : gameObjects)
+		delete gameObject;
+
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	IMG_Quit();

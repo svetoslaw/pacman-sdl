@@ -6,7 +6,6 @@ class GameObject
 public:
 	//error prone
 	virtual SDL_FRect getTransform();
-	virtual void setTransform();
 	virtual std::string getTag();
 	virtual void LoadMedia(SDL_Renderer* renderer);
 	virtual void Start();

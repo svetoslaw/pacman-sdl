@@ -16,6 +16,7 @@ bool LevelBuilder::BuildLevelFromFile(App& app, std::string filePath)
         Player* player;
         Wall* wall;
         Point* point;
+        Ghost* ghost;
 
         SDL_FRect rect = { 0, 0, TILE_SIZE, TILE_SIZE };
 
@@ -25,8 +26,6 @@ bool LevelBuilder::BuildLevelFromFile(App& app, std::string filePath)
 
         while (fileStream.get(c))
         {
-            //printf("%c", c);
-
             switch (c)
             {
             case 'w':
@@ -51,11 +50,19 @@ bool LevelBuilder::BuildLevelFromFile(App& app, std::string filePath)
                 app.AddGameObject(player);
                 rect.x += TILE_SIZE;
                 break;
+            case 'g':
+                ghost = new Ghost();
+                ghost->setTransform(rect);
+                ghost->setTileGraph(tileGraph);
+                app.AddGameObject(ghost);
+                rect.x += TILE_SIZE;
+                break;
+            case ' ':
+                rect.x += TILE_SIZE;
+                break;
             case '\n':
                 rect.x = 0;
                 rect.y += TILE_SIZE;
-
-                printf("\n");
                 break;
             default:
                 break;
@@ -64,9 +71,4 @@ bool LevelBuilder::BuildLevelFromFile(App& app, std::string filePath)
     }
 
     return successFlag;
-}
-
-void LevelBuilder::CreateTileGraph()
-{
-   TileGraph* t = new TileGraph(23 * TILE_SIZE, 23 * TILE_SIZE);
 }

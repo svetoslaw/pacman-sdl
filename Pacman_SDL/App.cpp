@@ -1,5 +1,4 @@
 #include "App.h"
-#include <Player.h>
 
 bool App::Init()
 {
@@ -73,6 +72,11 @@ void App::Quit()
 void App::AddGameObject(GameObject* gameObject)
 {
 	gameObjects.push_back(gameObject);
+}
+
+std::vector<GameObject*> App::getGameObjects()
+{
+	return gameObjects;
 }
 
 void App::MainLoop()

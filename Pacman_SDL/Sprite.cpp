@@ -8,6 +8,12 @@ Sprite::~Sprite()
 
 bool Sprite::LoadTexture(SDL_Renderer* renderer, std::string path)
 {
+	if (texture != NULL)
+	{
+		SDL_DestroyTexture;
+		texture == NULL;
+	}
+
 	bool successFlag = true;
 	texture = IMG_LoadTexture(renderer, path.c_str());
 	if (texture == NULL)

@@ -14,6 +14,7 @@ public:
 	void Quit();
 
 	void AddGameObject(GameObject* gameObject);
+	std::vector<GameObject*> getGameObjects();
 	//SDL_Texture* LoadTexture(std::string path);
 
 	//Try NOT to pass the renderer around

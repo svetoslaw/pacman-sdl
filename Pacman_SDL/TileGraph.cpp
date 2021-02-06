@@ -1,6 +1,5 @@
 #include "TileGraph.h"
 
-//rbw
 TileGraph::TileGraph(int width, int height)
 {
 	this->width = width;

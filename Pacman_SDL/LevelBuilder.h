@@ -7,11 +7,13 @@
 #include "Wall.h"
 #include "Point.h"
 #include "Ghost.h"
+#include "Pill.h"
 
 class LevelBuilder
 {
 public:
 	bool BuildLevelFromFile(App& app, std::string filePath);
 private:
+
 };
 

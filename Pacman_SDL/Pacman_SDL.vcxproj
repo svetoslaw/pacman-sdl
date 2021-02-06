@@ -145,6 +145,7 @@
     <ClCompile Include="Ghost.cpp" />
     <ClCompile Include="LevelBuilder.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pill.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="Commons.h" />
     <ClInclude Include="Ghost.h" />
     <ClInclude Include="LevelBuilder.h" />
+    <ClInclude Include="Pill.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="Sprite.h" />

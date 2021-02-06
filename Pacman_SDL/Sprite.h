@@ -25,6 +25,6 @@ public:
 private:
 	//move spritePaths to this class
 	//std::string texturePath;
-	SDL_Texture* texture;
+	SDL_Texture* texture = NULL;
 };
 

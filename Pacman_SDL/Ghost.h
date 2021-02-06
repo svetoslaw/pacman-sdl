@@ -30,29 +30,44 @@ public:
 	void setTileGraph(TileGraph* tileGraph);
 
 	GhostState getState();
+	void SetToScatterState();
 
 private:
 	SDL_FRect transform;
 	const std::string tag = "Ghost";
 
-	Sprite sprite;
-	const std::string spritePath = "./Assets/pacman-art/ghosts/inky.png";
+
+	Sprite* currentSprite;
+	Sprite mainSprite;
+	Sprite scatterSprite;
+	const std::string mainSpritePath = "./Assets/pacman-art/ghosts/inky.png";
+	const std::string scatterSpritePath = "./Assets/pacman-art/ghosts/blue_ghost.png";
 
 	GhostState state = GhostState::CHASING;
 	MoveDirection chosenDirection = MoveDirection::UP;
+
+	std::vector<MoveDirection> possibleDirections;
+
 	float spawnDelay = 2;
 	float spawnDelay_p = 0;
 	int spawnTileMoves = 2;
+
 	const float speed = 160;
 	float movementStack = 0;
 	int travelSpaces = TILE_SIZE;
-	std::vector<MoveDirection> possibleDirections;
+
+	const float scatterDuration = 5;
+	float scatterDuration_p = 0;
 
 	TileGraph* tileGraph;
 
 	void Move(float deltaTime);
 
+
 	void AI_Random(float deltaTime);
+
+	/*Selects a random adjacent Tile to move to*/
+	/*Only choses to reverse it's direction if there is not othe possibility*/
 	void AI_Random_ChooseDirection();
 };
 

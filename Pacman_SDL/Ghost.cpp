@@ -2,12 +2,18 @@
 
 void Ghost::LoadMedia(SDL_Renderer* renderer)
 {
-	sprite.LoadTexture(renderer, spritePath);
+	mainSprite.LoadTexture(renderer, mainSpritePath);
+	scatterSprite.LoadTexture(renderer, scatterSpritePath);
 }
 
 void Ghost::Render(SDL_Renderer* renderer)
 {
-	sprite.RenderTexture(renderer, &transform);
+	currentSprite->RenderTexture(renderer, &transform);
+}
+
+void Ghost::Start()
+{
+	currentSprite = &mainSprite;
 }
 
 std::string Ghost::getTag()
@@ -35,8 +41,36 @@ GhostState Ghost::getState()
 	return state;
 }
 
-void Ghost::Start()
+void Ghost::SetToScatterState()
 {
+	scatterDuration_p = 0;
+	if (state != GhostState::SCATTERING)
+	{
+		state = GhostState::SCATTERING;
+		switch (chosenDirection)
+		{
+		case MoveDirection::UP:
+			chosenDirection = MoveDirection::DOWN;
+			break;
+		case MoveDirection::DOWN:
+			chosenDirection = MoveDirection::UP;
+			break;
+		case MoveDirection::LEFT:
+			chosenDirection = MoveDirection::RIGHT;
+			break;
+		case MoveDirection::RIGHT:
+			chosenDirection = MoveDirection::LEFT;
+			break;
+		case MoveDirection::NONE:
+			break;
+		default:
+			break;
+		}
+
+		travelSpaces = TILE_SIZE - travelSpaces;
+
+		currentSprite = &scatterSprite;
+	}
 }
 
 void Ghost::HandleEvent(SDL_Event& event)
@@ -114,6 +148,19 @@ void Ghost::AI_Random(float deltaTime)
 
 		break;
 	case GhostState::SCATTERING:
+		scatterDuration_p += deltaTime;
+		if (scatterDuration_p >= scatterDuration)
+		{
+			state = GhostState::CHASING;
+			currentSprite = &mainSprite;
+		}
+
+		if (travelSpaces == 0)
+		{
+			AI_Random_ChooseDirection();
+			travelSpaces += TILE_SIZE;
+		}
+		Move(deltaTime);
 		break;
 	case GhostState::RETURNING:
 		break;
@@ -121,6 +168,7 @@ void Ghost::AI_Random(float deltaTime)
 		break;
 	}
 }
+
 
 void Ghost::AI_Random_ChooseDirection()
 {

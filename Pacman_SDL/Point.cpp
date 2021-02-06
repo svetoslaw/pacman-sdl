@@ -20,9 +20,9 @@ void Point::Render(SDL_Renderer* renderer)
 	sprite.RenderTexture(renderer, &transform);
 }
 
-void Point::OnCollision(GameObject& other, float deltaTime)
+void Point::OnCollision(GameObject* other, float deltaTime)
 {
-	if (other.getTag() == "Player")
+	if (other->getTag() == "Player")
 		this->Destroy();
 }
 

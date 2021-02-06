@@ -12,16 +12,15 @@ void Pill::Render(SDL_Renderer* renderer)
 
 void Pill::Start()
 {
+
 }
 
-void Pill::OnCollision(GameObject& other, float deltaTime)
+void Pill::OnCollision(GameObject* other, float deltaTime)
 {
-	if (other.getTag() == "Player")
+	if (other->getTag() == "Player")
 	{
-		for (auto& gameObject : ghosts)
-		{
-			
-		}
+		for (auto& ghost : ghosts)
+			ghost.lock()->SetToScatterState();
 
 		this->Destroy();
 	}
@@ -37,8 +36,9 @@ void Pill::setTransform(SDL_FRect transform)
 	this->transform = transform;
 }
 
-void Pill::addGhost(Ghost* ghost)
+void Pill::AddGhost(const std::shared_ptr<Ghost> &ghost)
 {
+	std::weak_ptr<Ghost> ghostWP = ghost;
 	this->ghosts.push_back(ghost);
 }
 

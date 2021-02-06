@@ -31,7 +31,7 @@ void Ghost::setTransform(SDL_FRect transform)
 	this->transform = transform;
 }
 
-void Ghost::setTileGraph(TileGraph* tileGraph)
+void Ghost::setTileGraph(const std::shared_ptr<TileGraph> &tileGraph)
 {
 	this->tileGraph = tileGraph;
 }
@@ -75,6 +75,7 @@ void Ghost::SetToScatterState()
 
 void Ghost::HandleEvent(SDL_Event& event)
 {
+
 }
 
 void Ghost::Update(float deltaTime)
@@ -82,8 +83,13 @@ void Ghost::Update(float deltaTime)
 	AI_Random(deltaTime);
 }
 
-void Ghost::OnCollision(GameObject& other, float deltaTime)
+void Ghost::OnCollision(GameObject* other, float deltaTime)
 {
+	if (other->getTag() == "Player")
+	{
+		if (state == GhostState::SCATTERING)
+			Destroy();
+	}
 }
 
 void Ghost::Move(float deltaTime)
@@ -169,24 +175,23 @@ void Ghost::AI_Random(float deltaTime)
 	}
 }
 
-
 void Ghost::AI_Random_ChooseDirection()
 {
 	Tile* tile;
 
-	tile = tileGraph->GetTileAt(Vector2(transform.x, transform.y - 1));
+	tile = tileGraph.lock()->GetTileAt(Vector2(transform.x, transform.y - 1));
 	if (chosenDirection != MoveDirection::DOWN && tile->isPassable())
 		possibleDirections.push_back(MoveDirection::UP);
 
-	tile = tileGraph->GetTileAt(Vector2(transform.x, transform.y + TILE_SIZE));
+	tile = tileGraph.lock()->GetTileAt(Vector2(transform.x, transform.y + TILE_SIZE));
 	if (chosenDirection != MoveDirection::UP && tile->isPassable())
 		possibleDirections.push_back(MoveDirection::DOWN);
 
-	tile = tileGraph->GetTileAt(Vector2(transform.x - 1, transform.y));
+	tile = tileGraph.lock()->GetTileAt(Vector2(transform.x - 1, transform.y));
 	if (chosenDirection != MoveDirection::RIGHT && tile->isPassable())
 		possibleDirections.push_back(MoveDirection::LEFT);
 
-	tile = tileGraph->GetTileAt(Vector2(transform.x + TILE_SIZE, transform.y));
+	tile = tileGraph.lock()->GetTileAt(Vector2(transform.x + TILE_SIZE, transform.y));
 	if (chosenDirection != MoveDirection::LEFT && tile->isPassable())
 		possibleDirections.push_back(MoveDirection::RIGHT);
 

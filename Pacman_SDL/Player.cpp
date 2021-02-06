@@ -47,10 +47,6 @@ void Player::HandleEvent(SDL_Event& event)
 
 void Player::Move(float deltaTime)
 {
-	/*if (nextMove != prevMove || nextMove != MoveDirection::NONE)
-	{
-		movementStack = 0;
-	}*/
 	movementStack += speed * deltaTime;
 
 	while (movementStack >= 1.f)
@@ -89,39 +85,42 @@ void Player::Update(float deltaTime)
 	//printf("Score: %i\n", score);
 }
 
-void Player::OnCollision(GameObject& other, float deltaTime)
+void Player::OnCollision(GameObject* other, float deltaTime)
 {
-	if (other.getTag() == "Wall")
+	if (other->getTag() == "Wall")
 	{
 		/*Make sure to stop at wall*/
 		/*Revert intersection*/
 		if (nextMove == MoveDirection::RIGHT)
 		{
-			transform.x = other.getTransform().x - TILE_SIZE;
+			transform.x = other->getTransform().x - TILE_SIZE;
 		}
 		if (nextMove == MoveDirection::LEFT)
 		{
-			transform.x = other.getTransform().x + TILE_SIZE;
+			transform.x = other->getTransform().x + TILE_SIZE;
 		}
 		if (nextMove == MoveDirection::DOWN)
 		{
-			transform.y = other.getTransform().y - TILE_SIZE;
+			transform.y = other->getTransform().y - TILE_SIZE;
 		}
 		if (nextMove == MoveDirection::UP)
 		{
-			transform.y = other.getTransform().y + TILE_SIZE;
+			transform.y = other->getTransform().y + TILE_SIZE;
 		}
 	}
 
-	if (other.getTag() == "Point")
+	if (other->getTag() == "Point")
 	{
 		score += 100;
 	}
 
-	if (other.getTag() == "Ghost")
+	if (other->getTag() == "Ghost")
 	{
-		dead = true;
-		Destroy();
+		if (static_cast<Ghost*>(other)->getState() == GhostState::CHASING)
+		{
+			dead = true;
+			Destroy();
+		}
 	}
 }
 
@@ -135,7 +134,7 @@ void Player::setTransform(SDL_FRect transform)
 	this->transform = transform;
 }
 
-void Player::setTileGraph(TileGraph* tileGraph)
+void Player::setTileGraph(const std::shared_ptr<TileGraph> &tileGraph)
 {
 	this->tileGraph = tileGraph;
 }
@@ -186,7 +185,7 @@ bool Player::NextTileIsPassable()
 		break;
 	}
 	
-	tile = tileGraph->GetTileAt(Vector2(this->transform.x + dx, this->transform.y + dy));
+	tile = tileGraph.lock()->GetTileAt(Vector2(this->transform.x + dx, this->transform.y + dy));
 
 	if (tile == NULL)
 		return false;

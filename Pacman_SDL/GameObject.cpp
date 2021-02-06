@@ -34,7 +34,7 @@ bool GameObject::CheckForCollision(const SDL_FRect& other) {
 	return true;
 }
 
-void GameObject::OnCollision(GameObject& other, float deltaTime){}
+void GameObject::OnCollision(GameObject* other, float deltaTime){}
 
 bool GameObject::ToDestroy(){ return toDestroy; }
 
@@ -43,8 +43,9 @@ void GameObject::Destroy()
 	toDestroy = true;
 }
 
+/*
 GameObject::~GameObject()
 {
-}
+}*/
 
 void GameObject::HandleEvent(SDL_Event& event){}

@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Sprite.h"
 #include "TileGraph.h"
+#include "Ghost.h"
 #include "Commons.h"
 
 class Player : public GameObject
@@ -11,7 +12,7 @@ public:
 	void Start();
 	void HandleEvent(SDL_Event& event);
 	void Update(float deltaTime);
-	void OnCollision(GameObject& other, float deltaTime);
+	void OnCollision(GameObject* other, float deltaTime);
 	void Render(SDL_Renderer* renderer);
 
 	std::string getTag();
@@ -19,7 +20,7 @@ public:
 	SDL_FRect getTransform();
 	void setTransform(SDL_FRect transform);
 
-	void setTileGraph(TileGraph* tileGraph);
+	void setTileGraph(const std::shared_ptr<TileGraph> &tileGraph);
 
 private:
 	SDL_FRect transform;
@@ -28,12 +29,12 @@ private:
 	Sprite sprite;
 	const std::string spritePath = "./Assets/pacman-art/pacman-right/1.png";
 
-	TileGraph* tileGraph;
+	std::weak_ptr<TileGraph> tileGraph;
 
 	MoveDirection nextMove = MoveDirection::NONE;
 	MoveDirection tryMove = MoveDirection::NONE;
 
-	const float speed = 160;
+	const float speed = 144;
 	float movementStack = 0; /*Used to lock movement to integer values*/
 
 	unsigned score = 0;

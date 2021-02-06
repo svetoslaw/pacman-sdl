@@ -10,6 +10,7 @@
 #include <string>
 #include <random>
 #include <time.h>
+#include <memory>
 #include "Vector2.h"
 
 #define SCREEN_WIDTH 1280

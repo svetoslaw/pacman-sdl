@@ -14,14 +14,14 @@ public:
 	virtual void Render(SDL_Renderer* renderer);
 
 	virtual bool CheckForCollision(const SDL_FRect &other);
-	virtual void OnCollision(GameObject &other, float deltaTime);
+	virtual void OnCollision(GameObject* other, float deltaTime);
 
 	/*Return true if object should be destryoed*/
 	virtual bool ToDestroy(); 
 	/*Set an object to be destroy before the next Update*/
 	virtual void Destroy(); 
 
-	virtual ~GameObject();
+	//virtual ~GameObject();
 private:
 	bool toDestroy = false;
 };

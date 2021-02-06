@@ -19,7 +19,7 @@ public:
 	void Start();
 	void HandleEvent(SDL_Event& event);
 	void Update(float deltaTime);
-	void OnCollision(GameObject& other, float deltaTime);
+	void OnCollision(GameObject* other, float deltaTime);
 	void Render(SDL_Renderer* renderer);
 
 	std::string getTag();
@@ -27,7 +27,7 @@ public:
 	SDL_FRect getTransform();
 	void setTransform(SDL_FRect transform);
 
-	void setTileGraph(TileGraph* tileGraph);
+	void setTileGraph(const std::shared_ptr<TileGraph> &tileGraph);
 
 	GhostState getState();
 	void SetToScatterState();
@@ -52,14 +52,14 @@ private:
 	float spawnDelay_p = 0;
 	int spawnTileMoves = 2;
 
-	const float speed = 160;
+	const float speed = 144;
 	float movementStack = 0;
 	int travelSpaces = TILE_SIZE;
 
 	const float scatterDuration = 5;
 	float scatterDuration_p = 0;
 
-	TileGraph* tileGraph;
+	std::weak_ptr<TileGraph> tileGraph;
 
 	void Move(float deltaTime);
 

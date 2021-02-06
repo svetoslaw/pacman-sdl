@@ -8,9 +8,8 @@ public:
 	Tile* GetTileAt(Vector2 position);
 
 	TileGraph(int width, int height);
-	~TileGraph();
 private:
-	Tile* tiles;
+	std::unique_ptr<Tile[]> tiles;
 	int height; /*Number of tiles*/
 	int width;
 

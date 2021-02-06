@@ -7,7 +7,7 @@ class Point : public GameObject
 {
 public:
 	void LoadMedia(SDL_Renderer* renderer);
-	void OnCollision(GameObject& other, float deltaTime);
+	void OnCollision(GameObject* other, float deltaTime);
 	void Render(SDL_Renderer* renderer);
 	
 	std::string getTag();

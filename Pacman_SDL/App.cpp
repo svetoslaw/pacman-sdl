@@ -60,8 +60,8 @@ void App::Start()
 
 void App::Quit()
 {
-	for (auto& gameObject : gameObjects)
-		delete gameObject;
+	//for (auto& gameObject : gameObjects)
+	//	delete gameObject;
 
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
@@ -69,14 +69,19 @@ void App::Quit()
 	SDL_Quit();
 }
 
-void App::AddGameObject(GameObject* gameObject)
+void App::AddGameObject(std::shared_ptr<GameObject> gameObject)
 {
 	gameObjects.push_back(gameObject);
 }
 
-std::vector<GameObject*> App::getGameObjects()
+std::vector<std::shared_ptr<GameObject>> App::getGameObjects()
 {
 	return gameObjects;
+}
+
+void App::setTileGraph(const std::shared_ptr<TileGraph> &tileGraph)
+{
+	this->tileGraph = tileGraph;
 }
 
 void App::MainLoop()
@@ -113,7 +118,7 @@ void App::MainLoop()
 		deltaTime = (SDL_GetTicks() - lastTime) / 1000.0f;
 		lastTime = SDL_GetTicks();
 
-		//printf("delta time: %f\n", deltaTime);
+		//printf("size: %i\n", gameObjects.size());
 	}
 }
 
@@ -124,7 +129,7 @@ void App::DestroyObjects()
 	{
 		if ((*it)->ToDestroy())
 		{
-			delete *it;
+			//delete *it;
 			it = gameObjects.erase(it);
 		}
 		else
@@ -140,8 +145,8 @@ void App::CollisionCheck()
 		{
 			if (gameObjects[i]->CheckForCollision(gameObjects[j]->getTransform()))
 			{
-				gameObjects[i]->OnCollision(*gameObjects[j], deltaTime);
-				gameObjects[j]->OnCollision(*gameObjects[i], deltaTime);
+				gameObjects[i]->OnCollision(gameObjects[j].get(), deltaTime);
+				gameObjects[j]->OnCollision(gameObjects[i].get(), deltaTime);
 			}
 		}
 	}

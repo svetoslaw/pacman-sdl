@@ -5,7 +5,8 @@ TileGraph::TileGraph(int width, int height)
 	this->width = width;
 	this->height = height;
 
-	tiles = new Tile[width * height];
+	
+	tiles = std::make_unique<Tile[]>(width * height);
 	for (int y = 0; y < width; y++)
 	{
 		for (int x = 0; x < height; x++)
@@ -13,11 +14,6 @@ TileGraph::TileGraph(int width, int height)
 			tiles[x + y * width].setPosition(Vector2(x * TILE_SIZE, y * TILE_SIZE));
 		}
 	}
-}
-
-TileGraph::~TileGraph()
-{
-	delete[] tiles;
 }
 
 Tile* TileGraph::GetTileAt(Vector2 position)

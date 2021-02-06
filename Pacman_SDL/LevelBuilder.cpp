@@ -4,7 +4,6 @@ bool LevelBuilder::BuildLevelFromFile(App& app, std::string filePath)
 {
     bool successFlag = true;
 
-    std::ifstream fileStream;
     fileStream.open(filePath);
     if (!fileStream)
     {
@@ -13,69 +12,145 @@ bool LevelBuilder::BuildLevelFromFile(App& app, std::string filePath)
     }
     else
     {
-        Player* player;
-        Wall* wall;
-        Point* point;
-        Ghost* ghost;
-        Pill* pill;
-        SDL_FRect rect = { 0, 0, TILE_SIZE, TILE_SIZE };
+        /*Don't use hardcoded value*/
+        tileGraph = std::make_shared<TileGraph>(23 * TILE_SIZE, 23 * TILE_SIZE);
 
-        TileGraph* tileGraph = new TileGraph(23 * TILE_SIZE, 23 * TILE_SIZE);
+        CountGameObjectsNeeded();
 
-        char c;
+        CreateGameObjects();
 
-        while (fileStream.get(c))
+        SetupLevel(app);
+    }
+
+    fileStream.close();
+    return successFlag;
+}
+
+void LevelBuilder::CountGameObjectsNeeded()
+{
+    char c;
+
+    while (fileStream.get(c))
+    {
+        switch (c)
         {
-            switch (c)
-            {
-            case 'w':
-                wall = new Wall();
-                wall->setTransform(rect);
-                app.AddGameObject(wall);
-
-                tileGraph->GetTileAt(Vector2(rect.x, rect.y))->setIsPassable(false);
-
-                rect.x += TILE_SIZE;
-                break;
-            case '.':
-                point = new Point();
-                point->setTransform(rect);
-                app.AddGameObject(point);
-                rect.x += TILE_SIZE;
-                break;
-            case 'c':
-                player = new Player();
-                player->setTransform(rect);
-                player->setTileGraph(tileGraph);
-                app.AddGameObject(player);
-                rect.x += TILE_SIZE;
-                break;
-            case 'g':
-                ghost = new Ghost();
-                ghost->setTransform(rect);
-                ghost->setTileGraph(tileGraph);
-                app.AddGameObject(ghost);
-                rect.x += TILE_SIZE;
-                break;
-            case 'p':
-                pill = new Pill();
-                pill->setTransform(rect);
-                app.AddGameObject(pill);
-                rect.x += TILE_SIZE;
-                break;
-            case ' ':
-                rect.x += TILE_SIZE;
-                break;
-            case '\n':
-                rect.x = 0;
-                rect.y += TILE_SIZE;
-                break;
-            default:
-                rect.x += TILE_SIZE;
-                break;
-            }
+        case 'w':
+            wallsCount++;
+            break;
+        case '.':
+            pointsCount++;
+            break;
+        case 'c':
+            playersCount++;
+            break;
+        case 'g':
+            ghostsCount++;
+            break;
+        case 'p':
+            pillsCount++;
+            break;
+        default:
+            break;
         }
     }
 
-    return successFlag;
+    fileStream.clear();
+    fileStream.seekg(0);
+}
+
+void LevelBuilder::CreateGameObjects()
+{
+    for (int i = 0; i < playersCount; i++)
+        players.push_back(std::make_shared<Player>());
+
+    for (int i = 0; i < wallsCount; i++)
+        walls.push_back(std::make_shared<Wall>());
+    
+    for (int i = 0; i < pointsCount; i++)
+        points.push_back(std::make_shared<Point>());
+
+    for (int i = 0; i < ghostsCount; i++)
+        ghosts.push_back(std::make_shared<Ghost>());
+
+    for (int i = 0; i < pillsCount; i++)
+        pills.push_back(std::make_shared<Pill>());
+}
+
+void LevelBuilder::SetupLevel(App& app)
+{
+    printf("%i\n", walls.size());
+
+    for (int i = 0; i < wallsCount; i++)
+    {
+        //auto a = std::make_shared<Wall>();
+        walls.push_back(std::make_shared<Wall>());
+    }
+    char c;
+
+    int currentPlayer = 0;
+    int currentWall = 0;
+    int currentPoint = 0;
+    int currentGhost = 0;
+    int currentPill = 0;
+
+    while (fileStream.get(c))
+    {
+        switch (c)
+        {
+        case 'w':
+            walls[currentWall]->setTransform(rect);
+            app.AddGameObject(walls[currentWall]);
+            currentWall++;
+
+            tileGraph->GetTileAt(Vector2(rect.x, rect.y))->setIsPassable(false);
+
+            rect.x += TILE_SIZE;
+            break;
+        case '.':
+            points[currentPoint]->setTransform(rect);
+            app.AddGameObject(points[currentPoint]);
+            currentPoint++;
+
+            rect.x += TILE_SIZE;
+            break;
+        case 'c':
+            players[currentPlayer]->setTransform(rect);
+            players[currentPlayer]->setTileGraph(tileGraph);
+            app.AddGameObject(players[currentPlayer]);
+            currentPlayer++;
+
+            rect.x += TILE_SIZE;
+            break;
+        case 'g':
+            ghosts[currentGhost]->setTransform(rect);
+            ghosts[currentGhost]->setTileGraph(tileGraph);
+            app.AddGameObject(ghosts[currentGhost]);
+            currentGhost++;
+
+            rect.x += TILE_SIZE;
+            break;
+        case 'p':
+            pills[currentPill]->setTransform(rect);
+            
+            for (int i = 0; i < ghostsCount; i++)
+                pills[currentPill]->AddGhost(ghosts[i]);
+                
+            app.AddGameObject(pills[currentPill]);
+            currentPill++;
+
+            rect.x += TILE_SIZE;
+            break;
+        case ' ':
+            rect.x += TILE_SIZE;
+            break;
+            
+        case '\n':
+            rect.x = 0;
+            rect.y += TILE_SIZE;
+            break;
+        default:
+            rect.x += TILE_SIZE;
+            break;
+        }
+    }
 }

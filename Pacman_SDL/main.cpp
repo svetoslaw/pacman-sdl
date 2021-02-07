@@ -14,9 +14,9 @@ int main(int argc, char* args[])
 		printf("Failed to Initialize\n");
 	else
 	{
+		//try to remove
 		LevelBuilder lb;
 		lb.BuildLevelFromFile(app, "./Assets/levels/level1.txt");
-
 		app.Start();
 	}
 

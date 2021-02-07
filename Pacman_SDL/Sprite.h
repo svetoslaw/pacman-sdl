@@ -5,26 +5,17 @@
 class Sprite
 {
 public:
-	/*
-	Sprite();
-	Sprite(std::string path);
-	Sprite(std::string path, SDL_Rect transform);
-
-	void setPath(std::string path);
-	std::string getPath();
-	void setTexture(SDL_Texture* texture);
-	*/
-
 	~Sprite();
-
-	//SDL_Texture* getTexture();
 	
 	bool LoadTexture(SDL_Renderer* renderer, std::string path);
+	bool LoadTextureFromText(SDL_Renderer* renderer, TTF_Font* font, std::string text);
 	void RenderTexture(SDL_Renderer* renderer, const SDL_FRect* destination);
+	void RenderShape(SDL_Renderer* renderer, const SDL_FRect* rect, SDL_Color color);
 	
 private:
 	//move spritePaths to this class
 	//std::string texturePath;
 	SDL_Texture* texture = NULL;
+	//TTF_Font* font = NULL;
 };
 

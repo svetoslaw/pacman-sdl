@@ -4,6 +4,7 @@
 #include "TileGraph.h"
 #include "Ghost.h"
 #include "Commons.h"
+#include "UI.h"
 
 class Player : public GameObject
 {
@@ -22,6 +23,8 @@ public:
 
 	void setTileGraph(const std::shared_ptr<TileGraph> &tileGraph);
 
+	void AddGhost(const std::shared_ptr<Ghost> &ghost);
+	void AddUI(const std::shared_ptr<UI>& ui);
 private:
 	SDL_FRect transform;
 	const std::string tag = "Player";
@@ -34,8 +37,12 @@ private:
 	MoveDirection nextMove = MoveDirection::NONE;
 	MoveDirection tryMove = MoveDirection::NONE;
 
-	const float speed = 144;
+	float speed = 112;
+	//const float pillSpeedChange = 16;
 	float movementStack = 0; /*Used to lock movement to integer values*/
+
+	std::vector<std::weak_ptr<Ghost>> ghosts;
+	std::weak_ptr<UI> ui;
 
 	unsigned score = 0;
 

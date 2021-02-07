@@ -18,12 +18,7 @@ void Pill::Start()
 void Pill::OnCollision(GameObject* other, float deltaTime)
 {
 	if (other->getTag() == "Player")
-	{
-		for (auto& ghost : ghosts)
-			ghost.lock()->SetToScatterState();
-
 		this->Destroy();
-	}
 }
 
 SDL_FRect Pill::getTransform()
@@ -34,12 +29,6 @@ SDL_FRect Pill::getTransform()
 void Pill::setTransform(SDL_FRect transform)
 {
 	this->transform = transform;
-}
-
-void Pill::AddGhost(const std::shared_ptr<Ghost> &ghost)
-{
-	std::weak_ptr<Ghost> ghostWP = ghost;
-	this->ghosts.push_back(ghost);
 }
 
 std::string Pill::getTag()

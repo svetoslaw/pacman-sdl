@@ -30,7 +30,9 @@ public:
 	void setTileGraph(const std::shared_ptr<TileGraph> &tileGraph);
 
 	GhostState getState();
+	void SetToChasingState();
 	void SetToScatterState();
+	void SetToReturningState();
 
 private:
 	SDL_FRect transform;
@@ -38,21 +40,29 @@ private:
 
 
 	Sprite* currentSprite;
+
 	Sprite mainSprite;
-	Sprite scatterSprite;
 	const std::string mainSpritePath = "./Assets/pacman-art/ghosts/inky.png";
+
+	Sprite scatterSprite;
 	const std::string scatterSpritePath = "./Assets/pacman-art/ghosts/blue_ghost.png";
+
+	Sprite returnSprite;
+	const std::string returnSpritePath = "./Assets/pacman-art/ghosts/eyes.png";
+
+	Vector2 spawnPosition;
 
 	GhostState state = GhostState::CHASING;
 	MoveDirection chosenDirection = MoveDirection::UP;
 
 	std::vector<MoveDirection> possibleDirections;
 
-	float spawnDelay = 2;
+	float spawnDelay = 3;
 	float spawnDelay_p = 0;
 	int spawnTileMoves = 2;
 
-	const float speed = 144;
+	float speed = 112;
+	const float pillSpeedChange = 32;
 	float movementStack = 0;
 	int travelSpaces = TILE_SIZE;
 
@@ -62,7 +72,7 @@ private:
 	std::weak_ptr<TileGraph> tileGraph;
 
 	void Move(float deltaTime);
-
+	void MoveToSpawn(float deltaTime);
 
 	void AI_Random(float deltaTime);
 

@@ -45,6 +45,17 @@ void Player::HandleEvent(SDL_Event& event)
 	}
 }
 
+void Player::AddGhost(const std::shared_ptr<Ghost>& ghost)
+{
+	std::weak_ptr<Ghost> ghostWP = ghost;
+	this->ghosts.push_back(ghost);
+}
+
+void Player::AddUI(const std::shared_ptr<UI>& ui)
+{
+	this->ui = ui;
+}
+
 void Player::Move(float deltaTime)
 {
 	movementStack += speed * deltaTime;
@@ -112,6 +123,7 @@ void Player::OnCollision(GameObject* other, float deltaTime)
 	if (other->getTag() == "Point")
 	{
 		score += 100;
+		ui.lock()->SetScoreText(score);
 	}
 
 	if (other->getTag() == "Ghost")
@@ -121,6 +133,14 @@ void Player::OnCollision(GameObject* other, float deltaTime)
 			dead = true;
 			Destroy();
 		}
+	}
+
+	if (other->getTag() == "Pill")
+	{
+		for (auto& ghost : ghosts)
+			ghost.lock()->SetToScatterState();
+
+		ui.lock()->ActivatePowerBar();
 	}
 }
 

@@ -4,6 +4,7 @@ void Ghost::LoadMedia(SDL_Renderer* renderer)
 {
 	mainSprite.LoadTexture(renderer, mainSpritePath);
 	scatterSprite.LoadTexture(renderer, scatterSpritePath);
+	returnSprite.LoadTexture(renderer, returnSpritePath);
 }
 
 void Ghost::Render(SDL_Renderer* renderer)
@@ -14,6 +15,7 @@ void Ghost::Render(SDL_Renderer* renderer)
 void Ghost::Start()
 {
 	currentSprite = &mainSprite;
+	spawnPosition = Vector2(transform.x, transform.y);
 }
 
 std::string Ghost::getTag()
@@ -41,11 +43,23 @@ GhostState Ghost::getState()
 	return state;
 }
 
+void Ghost::SetToChasingState()
+{
+	state = GhostState::CHASING;
+	currentSprite = &mainSprite;
+	movementStack = 0;
+
+	speed += pillSpeedChange;
+}
+
 void Ghost::SetToScatterState()
 {
 	scatterDuration_p = 0;
-	if (state != GhostState::SCATTERING)
+	if (state == GhostState::CHASING)
 	{
+		movementStack = 0;
+
+		speed -= pillSpeedChange;
 		state = GhostState::SCATTERING;
 		switch (chosenDirection)
 		{
@@ -73,6 +87,15 @@ void Ghost::SetToScatterState()
 	}
 }
 
+void Ghost::SetToReturningState()
+{
+	state = GhostState::RETURNING;
+	travelSpaces = 0;
+	movementStack = 0;
+
+	currentSprite = &returnSprite;
+}
+
 void Ghost::HandleEvent(SDL_Event& event)
 {
 
@@ -88,7 +111,7 @@ void Ghost::OnCollision(GameObject* other, float deltaTime)
 	if (other->getTag() == "Player")
 	{
 		if (state == GhostState::SCATTERING)
-			Destroy();
+			SetToReturningState();
 	}
 }
 
@@ -123,11 +146,58 @@ void Ghost::Move(float deltaTime)
 	}
 }
 
+void Ghost::MoveToSpawn(float deltaTime)
+{
+	movementStack += speed * deltaTime;
+	while (movementStack >= 1)
+	{
+		if (transform.x > spawnPosition.x)
+			transform.x -= 1;
+		else if (transform.x < spawnPosition.x)
+			transform.x += 1;
+
+		if (transform.y > spawnPosition.y)
+			transform.y -= 1;
+		else if (transform.y < spawnPosition.y)
+			transform.y += 1;
+
+		movementStack -= 1;
+	}
+}
+
 void Ghost::AI_Random(float deltaTime)
 {
 	switch (state)
 	{
-	case GhostState::SPAWNING:
+	
+	case GhostState::CHASING:
+		if (travelSpaces == 0)
+		{
+			AI_Random_ChooseDirection();
+			travelSpaces += TILE_SIZE;
+		}
+		Move(deltaTime);
+		break;
+	case GhostState::SCATTERING:
+		scatterDuration_p += deltaTime;
+		if (scatterDuration_p >= scatterDuration)
+			SetToChasingState();
+
+		if (travelSpaces == 0)
+		{
+			AI_Random_ChooseDirection();
+			travelSpaces += TILE_SIZE;
+		}
+		Move(deltaTime);
+		break;
+	case GhostState::RETURNING:
+		if (transform.x == spawnPosition.x && transform.y == spawnPosition.y)
+			SetToChasingState();
+		else
+			MoveToSpawn(deltaTime);
+		break;
+	/*Not used currently*/
+	case GhostState::SPAWNING: 
 		if (spawnDelay_p < spawnDelay)
 			spawnDelay_p += deltaTime;
 		else
@@ -140,35 +210,9 @@ void Ghost::AI_Random(float deltaTime)
 				spawnTileMoves--;
 				travelSpaces = TILE_SIZE;
 				if (spawnTileMoves == 0)
-					state = GhostState::CHASING;
+					SetToChasingState();
 			}
 		}
-		break;
-	case GhostState::CHASING:
-		if (travelSpaces == 0)
-		{
-			AI_Random_ChooseDirection();
-			travelSpaces += TILE_SIZE;
-		}
-		Move(deltaTime);
-
-		break;
-	case GhostState::SCATTERING:
-		scatterDuration_p += deltaTime;
-		if (scatterDuration_p >= scatterDuration)
-		{
-			state = GhostState::CHASING;
-			currentSprite = &mainSprite;
-		}
-
-		if (travelSpaces == 0)
-		{
-			AI_Random_ChooseDirection();
-			travelSpaces += TILE_SIZE;
-		}
-		Move(deltaTime);
-		break;
-	case GhostState::RETURNING:
 		break;
 	default:
 		break;

@@ -8,20 +8,24 @@
 #include "Point.h"
 #include "Ghost.h"
 #include "Pill.h"
+#include "UI.h"
 
 class LevelBuilder
 {
 public:
-	bool BuildLevelFromFile(App& app, std::string filePath);
+	bool BuildLevelFromFile(App &app, std::string filePath);
 private:
     std::ifstream fileStream;
+
+    SDL_FRect rect = { 0, 0, TILE_SIZE, TILE_SIZE };
+
+    std::shared_ptr<UI> ui;
 
     std::vector<std::shared_ptr<Player>> players;
     std::vector<std::shared_ptr<Wall>> walls;
     std::vector<std::shared_ptr<Point>> points;
     std::vector<std::shared_ptr<Ghost>> ghosts;
     std::vector<std::shared_ptr<Pill>> pills;
-    SDL_FRect rect = { 0, 0, TILE_SIZE, TILE_SIZE };
 
     int playersCount = 0;
     int wallsCount = 0;
@@ -33,6 +37,8 @@ private:
 
     void CountGameObjectsNeeded();
     void CreateGameObjects();
-    void SetupLevel(App& app);
+    void SetupLevel(App &app);
+
+    void BuildUI(App &app);
 };
 

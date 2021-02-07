@@ -60,6 +60,8 @@ void LevelBuilder::CountGameObjectsNeeded()
 
 void LevelBuilder::CreateGameObjects()
 {
+    ui = std::make_shared<UI>();
+
     for (int i = 0; i < playersCount; i++)
         players.push_back(std::make_shared<Player>());
 
@@ -80,11 +82,6 @@ void LevelBuilder::SetupLevel(App& app)
 {
     printf("%i\n", walls.size());
 
-    for (int i = 0; i < wallsCount; i++)
-    {
-        //auto a = std::make_shared<Wall>();
-        walls.push_back(std::make_shared<Wall>());
-    }
     char c;
 
     int currentPlayer = 0;
@@ -92,6 +89,8 @@ void LevelBuilder::SetupLevel(App& app)
     int currentPoint = 0;
     int currentGhost = 0;
     int currentPill = 0;
+
+    app.AddGameObject(ui);
 
     while (fileStream.get(c))
     {
@@ -116,6 +115,9 @@ void LevelBuilder::SetupLevel(App& app)
         case 'c':
             players[currentPlayer]->setTransform(rect);
             players[currentPlayer]->setTileGraph(tileGraph);
+            for (int i = 0; i < ghostsCount; i++)
+                players[currentPlayer]->AddGhost(ghosts[i]);
+            players[currentPlayer]->AddUI(ui);
             app.AddGameObject(players[currentPlayer]);
             currentPlayer++;
 
@@ -131,10 +133,6 @@ void LevelBuilder::SetupLevel(App& app)
             break;
         case 'p':
             pills[currentPill]->setTransform(rect);
-            
-            for (int i = 0; i < ghostsCount; i++)
-                pills[currentPill]->AddGhost(ghosts[i]);
-                
             app.AddGameObject(pills[currentPill]);
             currentPill++;
 
@@ -153,4 +151,9 @@ void LevelBuilder::SetupLevel(App& app)
             break;
         }
     }
+}
+
+void LevelBuilder::BuildUI(App &app)
+{
+
 }

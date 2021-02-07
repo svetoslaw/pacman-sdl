@@ -34,9 +34,17 @@ bool App::Init()
 				}
 				else 
 				{
-					deltaTime = 0;
-					lastTime = SDL_GetTicks();
-					//Everything is OK
+					if (TTF_Init() == -1)
+					{
+						printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+						successFlag = false;
+					}
+					else 
+					{
+						deltaTime = 0;
+						lastTime = SDL_GetTicks();
+						//Everything is OK
+					}
 				}
 			}
 		}
@@ -62,10 +70,10 @@ void App::Quit()
 {
 	//for (auto& gameObject : gameObjects)
 	//	delete gameObject;
-
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	IMG_Quit();
+	TTF_Quit();
 	SDL_Quit();
 }
 

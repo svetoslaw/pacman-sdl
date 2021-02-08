@@ -25,6 +25,7 @@ public:
 
 	void AddGhost(const std::shared_ptr<Ghost> &ghost);
 	void AddUI(const std::shared_ptr<UI>& ui);
+	void SetNumberOfPoints(int number);
 private:
 	SDL_FRect transform;
 	const std::string tag = "Player";
@@ -38,7 +39,6 @@ private:
 	MoveDirection tryMove = MoveDirection::NONE;
 
 	float speed = 112;
-	//const float pillSpeedChange = 16;
 	float movementStack = 0; /*Used to lock movement to integer values*/
 
 	std::vector<std::weak_ptr<Ghost>> ghosts;
@@ -46,9 +46,13 @@ private:
 
 	unsigned score = 0;
 
-	bool dead = false;
+	//Better to controll the game state in a separate Class
+	int numberOfPoints = 0;
 
 	void Move(float deltaTime);
 
-	bool NextTileIsPassable();
+	//bool NextTileIsPassable();
+	/*supperior*/
+	bool NextTileIsPassable2();
+	void Win();
 };

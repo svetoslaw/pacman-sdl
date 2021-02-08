@@ -148,7 +148,7 @@ void Ghost::Move(float deltaTime)
 
 void Ghost::MoveToSpawn(float deltaTime)
 {
-	movementStack += speed * deltaTime;
+	movementStack += (speed * deltaTime) * 0.75;
 	while (movementStack >= 1)
 	{
 		if (transform.x > spawnPosition.x)

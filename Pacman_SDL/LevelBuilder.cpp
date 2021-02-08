@@ -118,6 +118,7 @@ void LevelBuilder::SetupLevel(App& app)
             for (int i = 0; i < ghostsCount; i++)
                 players[currentPlayer]->AddGhost(ghosts[i]);
             players[currentPlayer]->AddUI(ui);
+            players[currentPlayer]->SetNumberOfPoints(pointsCount);
             app.AddGameObject(players[currentPlayer]);
             currentPlayer++;
 

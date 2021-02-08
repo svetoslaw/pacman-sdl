@@ -28,7 +28,7 @@ bool Sprite::LoadTextureFromText(SDL_Renderer* renderer, TTF_Font* font, std::st
 {
 	bool successFlag = true;
 
-	SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), { 255, 255, 255, 255 });
+	SDL_Surface* surface = TTF_RenderText_Blended(font, text.c_str(), { 255, 255, 255, 255 });
 	if (surface == NULL)
 	{
 		printf("Unable to render text surface! SDL_ttf Error: %s\n", TTF_GetError());

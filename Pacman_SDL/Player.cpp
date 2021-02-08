@@ -56,13 +56,18 @@ void Player::AddUI(const std::shared_ptr<UI>& ui)
 	this->ui = ui;
 }
 
+void Player::SetNumberOfPoints(int number)
+{
+	numberOfPoints = number;
+}
+
 void Player::Move(float deltaTime)
 {
 	movementStack += speed * deltaTime;
 
 	while (movementStack >= 1.f)
 	{
-		if (NextTileIsPassable())
+		if (NextTileIsPassable2())
 			nextMove = tryMove;
 
 		switch (nextMove)
@@ -91,9 +96,11 @@ void Player::Move(float deltaTime)
 
 void Player::Update(float deltaTime)
 {
-	Move(deltaTime);
+	if (numberOfPoints <= 0)
+		Win();
 
-	//printf("Score: %i\n", score);
+
+	Move(deltaTime);
 }
 
 void Player::OnCollision(GameObject* other, float deltaTime)
@@ -124,15 +131,19 @@ void Player::OnCollision(GameObject* other, float deltaTime)
 	{
 		score += 100;
 		ui.lock()->SetScoreText(score);
+		numberOfPoints--;
 	}
 
 	if (other->getTag() == "Ghost")
 	{
-		if (static_cast<Ghost*>(other)->getState() == GhostState::CHASING)
+		auto g = static_cast<Ghost*>(other);
+		if (g->getState() == GhostState::CHASING)
 		{
-			dead = true;
+			ui.lock()->SetEndText("Defeat");
 			Destroy();
 		}
+		if (g->getState() == GhostState::SCATTERING)
+			score += 300;
 	}
 
 	if (other->getTag() == "Pill")
@@ -159,56 +170,47 @@ void Player::setTileGraph(const std::shared_ptr<TileGraph> &tileGraph)
 	this->tileGraph = tileGraph;
 }
 
-bool Player::NextTileIsPassable()
+bool Player::NextTileIsPassable2()
 {
-	Tile* tile;
-	int dx = 0;
-	int dy = 0;
+	Tile* tile1 = NULL;
+	Tile* tile2 = NULL;
 
-	//adapt to make controls smoother
+	auto tg = tileGraph.lock();
 
 	switch (tryMove)
 	{
 	case MoveDirection::UP:
-		dy = -1;
+		tile1 = tg->GetTileAt(Vector2(transform.x, transform.y - 1));
+		tile2 = tg->GetTileAt(Vector2(transform.x + transform.w-1, transform.y - 1));
 		break;
 	case MoveDirection::DOWN:
-		dy = TILE_SIZE +1;
+		tile1 = tg->GetTileAt(Vector2(transform.x, transform.y + transform.h));
+		tile2 = tg->GetTileAt(Vector2(transform.x + transform.w-1, transform.y + transform.h));
 		break;
 	case MoveDirection::LEFT:
-		dx = -1;
+		tile1 = tg->GetTileAt(Vector2(transform.x - 1, transform.y));
+		tile2 = tg->GetTileAt(Vector2(transform.x - 1, transform.y + transform.h-1));
 		break;
 	case MoveDirection::RIGHT:
-		dx = TILE_SIZE +1;
+		tile1 = tg->GetTileAt(Vector2(transform.x + transform.w, transform.y));
+		tile2 = tg->GetTileAt(Vector2(transform.x + transform.w, transform.y + transform.h-1));
 		break;
 	case MoveDirection::NONE:
 		break;
 	default:
 		break;
 	}
-	
-	switch (nextMove)
-	{
-	case MoveDirection::UP:
-		dy += TILE_SIZE - 1;
-		break;
-	case MoveDirection::DOWN:
-		break;
-	case MoveDirection::LEFT:
-		dx += TILE_SIZE - 1;
-		break;
-	case MoveDirection::RIGHT:
-		break;
-	case MoveDirection::NONE:
-		break;
-	default:
-		break;
-	}
-	
-	tile = tileGraph.lock()->GetTileAt(Vector2(this->transform.x + dx, this->transform.y + dy));
 
-	if (tile == NULL)
+	if (tile1 == NULL || tile2 == NULL)
 		return false;
 	else
-		return tile->isPassable();
+		return (tile1->isPassable() && tile2->isPassable());
+}
+
+void Player::Win()
+{
+	for (auto& ghost : ghosts)
+		ghost.lock()->Destroy();
+
+	ui.lock()->SetEndText("Victory");
 }

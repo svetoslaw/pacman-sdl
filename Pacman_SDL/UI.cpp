@@ -7,13 +7,16 @@ SDL_FRect UI::getTransform()
 
 void UI::LoadMedia(SDL_Renderer* renderer)
 {
-	font = TTF_OpenFont("./Assets/OpenSans-Regular.ttf", 32);
+	font = TTF_OpenFont("./Assets/OpenSans-Regular.ttf", fontSize);
 	if (font == NULL)
 	{
 		printf("Failed to load font! SDL_ttf Error: %s\n", TTF_GetError());
 	}
 	else
+	{
 		scoreSprite.LoadTextureFromText(renderer, font, scoreText);
+		//endTextSprite.LoadTextureFromText(renderer, font, endText);
+	}
 }
 
 void UI::Update(float deltaTime)
@@ -32,7 +35,14 @@ void UI::Render(SDL_Renderer* renderer)
 		updateScore = false;
 	}
 
+	if (updateEndText)
+	{
+		ReloadEndText(renderer);
+		updateEndText = false;
+	}
+
 	scoreSprite.RenderTexture(renderer, &scoreTransform);
+	endTextSprite.RenderTexture(renderer, &endTextTransform);
 }
 
 void UI::ActivatePowerBar()
@@ -47,6 +57,12 @@ void UI::SetScoreText(int score)
 	updateScore = true;
 }
 
+void UI::SetEndText(std::string text)
+{
+	endText = text;
+	updateEndText = true;
+}
+
 void UI::ReducePowerBar(float deltaTime)
 {
 	powerDurtaion_p -= deltaTime;
@@ -57,4 +73,9 @@ void UI::ReducePowerBar(float deltaTime)
 void UI::ReloadScore(SDL_Renderer* renderer)
 {
 	scoreSprite.LoadTextureFromText(renderer, font, scoreText);
+}
+
+void UI::ReloadEndText(SDL_Renderer* renderer)
+{
+	endTextSprite.LoadTextureFromText(renderer, font, endText);
 }

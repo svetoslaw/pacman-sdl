@@ -15,16 +15,11 @@ public:
 
 	void ActivatePowerBar();
 	void SetScoreText(int score);
+	void SetEndText(std::string text);
 private:
 	SDL_FRect transform;
 
 	Sprite sprite;
-
-	Sprite scoreSprite;
-	TTF_Font* font;
-	SDL_FRect scoreTransform = { 384, 32, 64, 32 };
-	std::string scoreText = "Score: 0";
-	bool updateScore = false;
 
 	const SDL_FRect powerBar = { 384, 16, 64, 16 };
 	SDL_FRect powerBar_p = { 384, 16, 0, 0 };
@@ -32,7 +27,21 @@ private:
 	const float powerDuration = 5;
 	float powerDurtaion_p;
 
+	TTF_Font* font;
+	const int fontSize = 64;
+
+	Sprite scoreSprite;
+	SDL_FRect scoreTransform = { 384, 32, 80, 48 };
+	std::string scoreText = "Score: 0";
+	bool updateScore = false;
+
+	Sprite endTextSprite;
+	SDL_FRect endTextTransform = { 384, 128, 80, 48 };
+	std::string endText = "";
+	bool updateEndText = false;
+
 	void ReducePowerBar(float deltaTime);
 	void ReloadScore(SDL_Renderer* renderer);
+	void ReloadEndText(SDL_Renderer* renderer);
 };
 

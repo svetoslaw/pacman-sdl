@@ -80,8 +80,6 @@ void LevelBuilder::CreateGameObjects()
 
 void LevelBuilder::SetupLevel(App& app)
 {
-    printf("%i\n", walls.size());
-
     char c;
 
     int currentPlayer = 0;

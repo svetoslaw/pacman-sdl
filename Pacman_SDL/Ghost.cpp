@@ -90,10 +90,21 @@ void Ghost::SetToScatterState()
 void Ghost::SetToReturningState()
 {
 	state = GhostState::RETURNING;
-	travelSpaces = 0;
 	movementStack = 0;
 
 	currentSprite = &returnSprite;
+
+	auto tg = tileGraph.lock();
+	Tile* currentTile = tg->GetTileAt(Vector2(transform.x, transform.y));
+	pathToSpawn = tg->FindPath(currentTile, tg->GetTileAt(spawnPosition));
+
+	if (travelSpaces != 0) //hack to set the ideal centered position of the ghost to the tile
+	{
+		transform.x = currentTile->getPosition().x;
+		transform.y = currentTile->getPosition().y;
+
+		travelSpaces = 0;
+	}
 }
 
 void Ghost::HandleEvent(SDL_Event& event)
@@ -165,6 +176,20 @@ void Ghost::MoveToSpawn(float deltaTime)
 	}
 }
 
+void Ghost::MoveToSpawn2(float deltaTime)
+{
+	if (pathToSpawn.empty())
+		SetToChasingState();
+	if (travelSpaces == 0)
+	{
+		chosenDirection = pathToSpawn.front();
+		pathToSpawn.pop_front();
+		travelSpaces = TILE_SIZE;
+	}
+
+	Move(deltaTime);
+}
+
 void Ghost::AI_Random(float deltaTime)
 {
 	switch (state)
@@ -191,10 +216,7 @@ void Ghost::AI_Random(float deltaTime)
 		Move(deltaTime);
 		break;
 	case GhostState::RETURNING:
-		if (transform.x == spawnPosition.x && transform.y == spawnPosition.y)
-			SetToChasingState();
-		else
-			MoveToSpawn(deltaTime);
+		MoveToSpawn2(deltaTime);
 		break;
 	/*Not used currently*/
 	case GhostState::SPAWNING: 

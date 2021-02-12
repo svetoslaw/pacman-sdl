@@ -56,6 +56,7 @@ private:
 	MoveDirection chosenDirection = MoveDirection::UP;
 
 	std::vector<MoveDirection> possibleDirections;
+	std::deque<MoveDirection> pathToSpawn;
 
 	float spawnDelay = 3;
 	float spawnDelay_p = 0;
@@ -73,6 +74,7 @@ private:
 
 	void Move(float deltaTime);
 	void MoveToSpawn(float deltaTime);
+	void MoveToSpawn2(float deltaTime);
 
 	void AI_Random(float deltaTime);
 

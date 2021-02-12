@@ -11,6 +11,10 @@
 #include <random>
 #include <time.h>
 #include <memory>
+#include <tuple>
+#include <queue>
+#include <deque>
+#include <set>
 #include "Vector2.h"
 
 #define SCREEN_WIDTH 1280
